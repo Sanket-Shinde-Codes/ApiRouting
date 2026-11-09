@@ -1,0 +1,83 @@
+@baseUrl = http://localhost:5221
+@token = REPLACE_WITH_AUTHENTICATION__BEARERTOKEN
+@userId = 1
+
+### Get all users
+GET {{baseUrl}}/api/users
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get a user by ID
+GET {{baseUrl}}/api/users/{{userId}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Create a user
+# @name createUser
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Alex Morgan",
+  "email": "alex.morgan@techhive.example",
+  "department": "Human Resources"
+}
+
+### Update a user
+PUT {{baseUrl}}/api/users/{{userId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Alex Morgan",
+  "email": "alex.morgan@techhive.example",
+  "department": "IT"
+}
+
+### Delete a user
+DELETE {{baseUrl}}/api/users/{{userId}}
+Authorization: Bearer {{token}}
+
+### Verify missing user returns 404
+GET {{baseUrl}}/api/users/999999
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Invalid email returns 400
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Invalid Email User",
+  "email": "not-an-email",
+  "department": "IT"
+}
+
+### Whitespace-only fields return 400
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "   ",
+  "email": "valid@example.test",
+  "department": "IT"
+}
+
+### Malformed JSON returns 400 Problem Details
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{"name":
+
+### Invalid or missing token returns 401
+GET {{baseUrl}}/api/users
+Accept: application/json
+Authorization: Bearer invalid-token
+
+### Development-only endpoint verifies sanitized 500 handling
+GET {{baseUrl}}/api/_diagnostics/throw
+Authorization: Bearer {{token}}
